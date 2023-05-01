@@ -1,5 +1,6 @@
 
 ## Sample Usage
+### Initialization with existing ExpressJS router
 To initialize the router with existing expressjs router  
 
     import express  from 'express'
@@ -7,6 +8,87 @@ To initialize the router with existing expressjs router
 
     //Initialize with express router
     const router = new Router(express.Router())
+### Create a route 
+    
+    //Register a route GET /my-route
+    router.route(`get` ,`/my-route`, (req, res, next) => {
+        res.send(`Request received at route  ${req.method} my-route`)
+    })
+Or shorthand notation can be used as follows
+
+    //Register a route GET /my-route
+    router.get(`/my-route`, (req, res, next) => {
+        res.send(`Request received at route  ${req.method} my-route`)
+    })
+Supported HTTP methods are get, post, put, patch, delete, head, options
+
+For example, the following code registers a POST route.
+
+    router.post(`my-route`, (req, res, next) => {
+        res.send(``Request received at route ${req.method} my-route`)
+    })
+
+### Set up authentication for a route
+To enable authenticator for a route, an auth adapter needs to be set for the user.
+
+The AuthAdapter class should be defined in such a way that, it implements an async function called authenticate.
+
+This function will be called whenever a request is received at the route. This function should return the following object 
+    {
+        data: <Authentication information>,
+        error: <Authentication error>
+    }
+data should contain the authentication data. error should contain the authentication error. If authentication is successful, pass error as null and data as non null value.
+If authentication is unsuccessful, pass error as non null value. 
+
+By default the authentication failure HTTP response code is 401. 
+This can be configured.
+
+Upon successful authentication the the authentication data returned in data field will be available in express's request object with the key "identity". This key can be changed.
+To enable authentication for a route, pass the auth field to true in the options argument.
+
+
+#### Examples
+Example with a custom secret based authentication
+
+    import express  from 'express'
+    import {Router, AuthHandler } from  "nmicro-router" 
+    const router = new Router(express.Router())
+
+    class CustomAuth {
+        secret
+        constructor(secret) {
+            this.secret = secret
+        }
+        async authenticate(req, res, next, options) {
+            const secretInHeader = req.headers['x-secret'] || ''
+            if(secretInHeader != this.secret)
+                return {data: null, error: new Error(`Incorrect secret`)}
+            else 
+                return {data: {"user": {id: 1, name: "John doe"}, error: null }}
+        }
+    }
+    
+    router.authHandler.setAdapter(new CustomAuth("my-secret")) 
+
+    route.get("/route-with-auth", (req, res) => {
+        res.send(`Successfully authenticated and authentication data is`, req.identity)
+    }, { auth: true })
+
+#### Additonal customisations for authentication
+Setting up the authentication failure HTTP response code
+    
+    router.authHandler.setAdapter(new CustomAuth("my-secret")) 
+    router.authHandler.failureResponseHttpCode = 402 // failure code is set as 402
+
+Setting up the auth data key.
+
+    router.authHandler.setAuthDataField("authInfo")
+    route.post("/route-with-auth", (req, res) => {
+        res.send(`Successfully authenticated and authentication data is`, req.authInfo)
+    }, { auth: true })
+
+
 
 ## Methods
 ### route(method, path, cb, options = {})
