@@ -33,7 +33,8 @@ To enable authenticator for a route, an auth adapter needs to be set for the use
 
 The AuthAdapter class should be defined in such a way that, it implements an async function called authenticate.
 
-This function will be called whenever a request is received at the route. This function should return the following object 
+This function will be called whenever a request is received at the route. This function should return the following object
+
     {
         data: <Authentication information>,
         error: <Authentication error>
@@ -44,7 +45,7 @@ If authentication is unsuccessful, pass error as non null value.
 By default the authentication failure HTTP response code is 401. 
 This can be configured.
 
-Upon successful authentication the the authentication data returned in data field will be available in express's request object with the key "identity". This key can be changed.
+Upon successful authentication, the the authentication data returned in data field will be available in express's request object with the key "identity". This key can be changed.
 To enable authentication for a route, pass the auth field to true in the options argument.
 
 
@@ -87,6 +88,14 @@ Setting up the auth data key.
     route.post("/route-with-auth", (req, res) => {
         res.send(`Successfully authenticated and authentication data is`, req.authInfo)
     }, { auth: true })
+
+### Available auth adapters
+
+The follwoing additional auth adapters are available
+
+#### JWT Auth Adapter 
+
+[nmicro-jwt-auth](https://www.npmjs.com/package/nmicro-jwt-auth)
 
 
 
