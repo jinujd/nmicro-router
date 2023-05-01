@@ -3,6 +3,7 @@ export class Validator {
     adapter = new ValidationAdapter()
     rules
     failureResponseHttpCode = 400
+    validationSegments = [`params`, `query`, `body`]
     constructor(adapter, rules) {
         this.adapter = adapter 
         this.setRules(rules)
@@ -19,7 +20,7 @@ export class Validator {
         paramsToDelete.forEach(param => delete cleanedParams[param]) 
         return cleanedParams
     }
-    findParams =  (req) => (this.rules.$$validateIn || [`params`, `query`, `body`]).reduce( (result, item) => ({...result, ...(req[item] || {})}),{}) 
+    findParams =  (req) => (this.rules.$$validateIn || this.validationSegments).reduce( (result, item) => ({...result, ...(req[item] || {})}),{}) 
     async validate(params) {
         if(!this.adapter) return []  
         return await this.adapter.validate(params, this.cleanRules(this.rules)) 

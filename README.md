@@ -77,7 +77,7 @@ Example with a custom secret based authentication
         res.send(`Successfully authenticated and authentication data is`, req.identity)
     }, { auth: true })
 
-#### Additonal customisations for authentication
+#### Additonal customisations for authenticator
 Setting up the authentication failure HTTP response code
     
     router.authHandler.setAdapter(new CustomAuth("my-secret")) 
@@ -123,7 +123,7 @@ Example with a validator that does required field validations.
     router.validator.setAdapter(new RequiredValidator())
 
     route.post("/create-user", (req, res) => {
-        res.send(`Successfully authenticated and authentication data is`, req.identity)
+        res.send(`Successfully validated`)
     },{  
         validations: {
             required: [ `name`, `age` ]
@@ -131,7 +131,33 @@ Example with a validator that does required field validations.
     })
 
 
+#### Additonal customisations for validator
+By default, validations will be done against
+req.query, req.params and req.body
 
+If validations should be done specifically, it can be done by configuring the $$validateIn property.
+
+For example, the following code validates only against query and body
+
+     route.post("/create-user", (req, res) =>   {
+        res.send(`Successfully validated`)
+    },{  
+        validations: {
+            $$validateIn: [`query`, `body`],
+            required: [ `name`, `age` ]
+        } 
+    })
+
+Example for validating headers
+
+    route.post("/create-user", (req, res) =>   {
+            res.send(`Successfully validated`)
+        },{  
+            validations: {
+                $$validateIn: [`headers`],
+                required: [ `name`, `age` ]
+            } 
+        })
 
 
 ## Methods
