@@ -1,0 +1,33 @@
+{
+  "name": "nmicro-router",
+  "version": "1.0.0",
+  "description": "An advanced router for express js with features including authentication and request validation.",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jinujd/nmicro-router.git"
+  },
+  "keywords": [
+    "nmicro",
+    "router",
+    "express",
+    "express",
+    "advanced",
+    "router",
+    "auth",
+    "request",
+    "validation",
+    "jwt",
+    "auth"
+  ],
+  "author": "Jinu Joseph Daniel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jinujd/nmicro-router/issues"
+  },
+  "homepage": "https://github.com/jinujd/nmicro-router#readme"
+}
