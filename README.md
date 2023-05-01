@@ -158,7 +158,13 @@ Example for validating headers
                 required: [ `name`, `age` ]
             } 
         })
+### Available validation adapters
 
+The following validation adapters are available
+
+#### Fastest Validator
+
+[nmicro-fastest-validator](https://www.npmjs.com/package/fastest-validator)
 
 ## Methods
 ### route(method, path, cb, options = {})
