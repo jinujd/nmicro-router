@@ -29,7 +29,7 @@ For example, the following code registers a POST route.
     })
 
 ### Set up authentication for a route
-To enable authenticator for a route, an auth adapter needs to be set for the user.
+To enable authenticator for routes, an auth adapter needs to be set for the router.
 
 The AuthAdapter class should be defined in such a way that, it implements an async function called authenticate.
 
@@ -46,6 +46,7 @@ By default the authentication failure HTTP response code is 401.
 This can be configured.
 
 Upon successful authentication, the the authentication data returned in data field will be available in express's request object with the key "identity". This key can be changed.
+
 To enable authentication for a route, pass the auth field to true in the options argument.
 
 
@@ -91,11 +92,45 @@ Setting up the auth data key.
 
 ### Available auth adapters
 
-The follwoing additional auth adapters are available
+The following auth adapters are available
 
 #### JWT Auth Adapter 
 
 [nmicro-jwt-auth](https://www.npmjs.com/package/nmicro-jwt-auth)
+
+
+
+### Set up request validation for a route
+To enable request validations, a vaidation adapter needs to be set for the router.
+
+The Validator class should be defined so that, it implements an async function called validate. This function should return the list of identified validation errors as an array. If there are no errors identified, this function should return an empty array.
+
+To enable validation for a route, pass the validations field with value as an object containing validation rules, in the options argument. These rules will be passed to the validate function in validator.
+
+#### Examples 
+Example with a validator that does required field validations.
+
+    class RequiredValidator {
+        validate(params, rules) {
+            const errors = []
+            rules.required.forEach(requiredParam => {
+                if(params[requiredParam] === undefined) errors.push(`The parameter ${requiredParam} is required`)
+            return errors
+            })
+        }
+    }
+    
+    router.validator.setAdapter(new RequiredValidator())
+
+    route.post("/create-user", (req, res) => {
+        res.send(`Successfully authenticated and authentication data is`, req.identity)
+    },{  
+        validations: {
+            required: [ `name`, `age` ]
+        } 
+    })
+
+
 
 
 
