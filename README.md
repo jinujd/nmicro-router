@@ -1,5 +1,35 @@
 
-## Sample Usage
+# Example
+Example with JWT Bearer token authentication and request validation using [fastest-validator](https://www.npmjs.com/package/fastest-validator)
+
+    import express  from 'express'
+    import { JWTAuth } from 'nmicro-jwt-auth'
+    import { FastestValidatorAdapter } from 'nmicro-fastest-validator'
+    import {Router} from  'nmicro-router'
+
+    const JWT_VALIDATION_SECRET = `my-jwt-secret`
+    const myRouter = new Router(express.Router())
+    myRouter.authHandler.setAdapter(new JWTAuth()) 
+    myRouter.validator.setAdapter(new FastestValidatorAdapter())
+
+    const app = express()
+    app.use(express.json())
+    app.use(myRouter.router)
+
+    const myFn = (req, res) =>  res.send(`Hurray! It is working`)
+
+    const validations = { name: {optional: false, type: "string", min: 4, max: 50} }
+    const options = { validations, auth: true }
+    myRouter.post('/test', myFn, options)
+
+    const port = 8081
+    app.listen(port, () => console.log(`App listening in port ${port}`))
+
+
+
+
+
+## Usage
 ### Initialization with existing ExpressJS router
 To initialize the router with existing expressjs router  
 
@@ -27,7 +57,7 @@ Supported HTTP methods are get, post, put, patch, delete, head, options
 For example, the following code registers a POST route.
 
     router.post(`my-route`, (req, res, next) => {
-        res.send(`Request received at route ${req.method} my-route`)
+        res.send(``Request received at route ${req.method} my-route`)
     })
 
 ### Set up authentication for a route
@@ -56,7 +86,7 @@ To enable authentication for a route, pass the auth field to true in the options
 Example with a custom secret based authentication
 
     import express  from 'express'
-    import {Router, AuthHandler } from  "nmicro-router" 
+    import { Router, AuthHandler } from  "nmicro-router" 
     const router = new Router(express.Router())
 
     class CustomAuth {
