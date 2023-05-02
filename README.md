@@ -27,7 +27,7 @@ Supported HTTP methods are get, post, put, patch, delete, head, options
 For example, the following code registers a POST route.
 
     router.post(`my-route`, (req, res, next) => {
-        res.send(``Request received at route ${req.method} my-route`)
+        res.send(`Request received at route ${req.method} my-route`)
     })
 
 ### Set up authentication for a route
