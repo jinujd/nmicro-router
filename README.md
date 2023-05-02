@@ -8,6 +8,8 @@ To initialize the router with existing expressjs router
 
     //Initialize with express router
     const router = new Router(express.Router())
+    const app = express()
+    app.use(router)
 ### Create a route 
     
     //Register a route GET /my-route
